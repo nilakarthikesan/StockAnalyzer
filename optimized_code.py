@@ -1,3 +1,4 @@
+import os
 import numpy as np  # For numerical operations and matrix calculations
 import pandas as pd  # For handling stock data
 import yfinance as yf  # For fetching stock market data
@@ -25,10 +26,9 @@ end_year = 2023
 # Analysis period
 start_date = '2022-01-01'
 end_date = '2023-12-31'
-key = "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"
-
-llm = ChatOpenAI(model = "gpt-4o", 
-                 temperature = 0, 
+key = os.environ["OPENAI_API_KEY"]
+llm = ChatOpenAI(model = "gpt-4o",
+                 temperature = 0,
                  api_key = key,)
 
 prompt = f"""
@@ -71,7 +71,7 @@ def fetch_stock_data(tickers, start_date, end_date):
         pd.DataFrame: DataFrame containing adjusted closing prices for each ticker.
     """
     df = yf.download(tickers, start=start_date, end=end_date)
-    
+
     # Check if 'Adj Close' exists and extract it
     if ('Adj Close', '') in df.columns:
         return df['Adj Close']
@@ -166,8 +166,7 @@ end_date = '2023-12-31'
 risk_free_rate = 0.04
 
 # OpenAI API Key (Replace with your own)
-api_key = "sk-proj-XXXXXXX"
-
+api_key = os.environ["OPENAI_API_KEY"]
 # AI Model for summarization
 llm = ChatOpenAI(model="gpt-4o", temperature=0, api_key=api_key)
 
@@ -192,7 +191,7 @@ def plot_pe_ratio(ticker):
     """
     stock = yf.Ticker(ticker)
     pe_ratio = stock.history(period="2y")['Close'] / stock.info.get('trailingEps', np.nan)
-    
+
     plt.figure(figsize=(10, 5))
     plt.plot(pe_ratio, label="P/E Ratio")
     plt.title(f'{ticker} P/E Ratio Over Time')
@@ -213,7 +212,7 @@ def plot_eps(ticker):
     """
     stock = yf.Ticker(ticker)
     eps = stock.history(period="2y")['Close'] / stock.info.get('sharesOutstanding', np.nan)
-    
+
     plt.figure(figsize=(10, 5))
     plt.plot(eps, label="EPS", color='green')
     plt.title(f'{ticker} EPS Over Time')
@@ -224,5 +223,3 @@ def plot_eps(ticker):
 
 # Example usage
 plot_eps('AAPL')
-
-

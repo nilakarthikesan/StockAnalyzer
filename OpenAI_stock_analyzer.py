@@ -1,3 +1,4 @@
+import os
 from langchain_openai import ChatOpenAI
 from kpi_data_in_dictionary import kpis
 from finding_optimal_weights import weights_dict
@@ -19,10 +20,9 @@ assets = [
 start_year = 2022
 end_year = 2023
 
-key = "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"
-
-llm = ChatOpenAI(model = "gpt-4o", 
-                 temperature = 0, 
+key = os.environ["OPENAI_API_KEY"]
+llm = ChatOpenAI(model = "gpt-4o",
+                 temperature = 0,
                  api_key = key,)
 
 prompt = f"""
@@ -37,12 +37,12 @@ print(response.content)
 print("=" * 40)
 
 prompt2 = f"""
-Tell me the top 10 KPIs I could use to check for the preformance of stocks, explain the KPIs and how to interpret them they are how to interpret them.  
-Provide the python code to compute and visualize each of the KPIs. 
-Make sure the KPIs can be easilly extracted to include in the following prompt for interpretation. 
-The structure should be: 
-1) What is the KPI and how to interpret 
-2) Code snippet for a function to visualize over time for each of the {assets} seperatly for each KPI 
+Tell me the top 10 KPIs I could use to check for the preformance of stocks, explain the KPIs and how to interpret them they are how to interpret them.
+Provide the python code to compute and visualize each of the KPIs.
+Make sure the KPIs can be easilly extracted to include in the following prompt for interpretation.
+The structure should be:
+1) What is the KPI and how to interpret
+2) Code snippet for a function to visualize over time for each of the {assets} seperatly for each KPI
 years of analysis are {start_year} and {end_year}
 """
 
@@ -68,10 +68,10 @@ print("=" * 40)
 risk_free = 0.04
 
 prompt4 = f"""
-Explain what is the Modern Portfolio theory, with a risk free rate of {risk_free}. 
-Provide the Python code snippets for the MPT for the following assets {assets} for the years {start_year} to {end_year}. 
-Print the weights with two decimal cases. 
-Store the results in a dictionary with the tickers as keys and the weights as values. 
+Explain what is the Modern Portfolio theory, with a risk free rate of {risk_free}.
+Provide the Python code snippets for the MPT for the following assets {assets} for the years {start_year} to {end_year}.
+Print the weights with two decimal cases.
+Store the results in a dictionary with the tickers as keys and the weights as values.
 """
 
 response4 = llm.invoke(prompt4)
@@ -82,7 +82,7 @@ print(response4.content)
 print("=" * 40)
 
 prompt5 = f"""
-This is the portfolio allocation {weights_dict} from the MPT for the {assets}. 
+This is the portfolio allocation {weights_dict} from the MPT for the {assets}.
 Give me 5 different techniques to optimize this portfolio with pros and cons of each alternative and explain the differenece from the MPT
 """
 
